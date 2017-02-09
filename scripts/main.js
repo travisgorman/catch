@@ -1,16 +1,17 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-console.log('react:', React );
-console.log('react-dom:', ReactDOM  );
 
+/*
+	the layout - root component rendered to DOM
+*/
 const App = React.createClass({
 	render(){
 
 		return (  
 			<div className="catch-of-the-day">
 				<div className="menu">
-					<Header />					
+					<Header tagline="Fresh Seafood Market"/>					
 				</div>
 				<Order />
 				<Inventory />
@@ -18,16 +19,33 @@ const App = React.createClass({
 		)		
 	}	
 });
-
+/*
+	Header Component
+	<Header/>
+*/
 const Header = React.createClass({
 	render(){
-
+		console.log( this.props )
 		return (  
-		  <p>Header</p>
+		  <header className="top">
+		  	<h1>Catch 
+		  	<span className="ofThe">
+		  		<span className="of">of</span>
+		  		<span className="the">the</span>
+		  	</span>
+		  	
+		  	Day</h1>
+		  	<h3 className="tagline">
+		  		<span>{this.props.tagline}</span>
+		  	</h3>
+		  </header>
 		)
 	}
 });
-
+/*
+	Order Component
+	<Order/>
+*/
 const Order = React.createClass({
 	render(){
 
@@ -36,7 +54,10 @@ const Order = React.createClass({
 		)
 	}
 });
-
+/*
+	Inventory Component
+	<Inventory/>
+*/
 const Inventory = React.createClass({
 	render(){
 
@@ -45,7 +66,10 @@ const Inventory = React.createClass({
 		)
 	}
 });
-
+/*
+	StorePicker Component
+	<StorePicker/>
+*/
 const StorePicker = React.createClass({
 	render: function(){
 		var name = "travis"
@@ -60,7 +84,9 @@ const StorePicker = React.createClass({
 	}
 
 });
+/*
 
+*/
 ReactDOM.render(  
   <App/>,
   document.querySelector('#main')
