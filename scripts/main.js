@@ -31,7 +31,7 @@ const App = React.createClass({
 const AddFishForm = React.createClass({
 	render() {
 		return (  
-		  <form>
+		  <form className="fish-edit" onSubmit={this.createFish}>
 		  	<input type="text" ref="name" placeholder="Fish Name"/>
 		  	<input type="text" ref="price" placeholder="Fish Price"/>
 		  	<select ref="status">
@@ -44,7 +44,7 @@ const AddFishForm = React.createClass({
 		  </form>
 		)
 	}
-})
+});
 
 /*
 	Header Component
