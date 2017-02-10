@@ -25,6 +25,28 @@ const App = React.createClass({
 	}	
 });
 /*
+	Add Fish Form Component
+	<AddFishForm/>
+*/
+const AddFishForm = React.createClass({
+	render() {
+		return (  
+		  <form>
+		  	<input type="text" ref="name" placeholder="Fish Name"/>
+		  	<input type="text" ref="price" placeholder="Fish Price"/>
+		  	<select ref="status">
+		  		<option value="available">Fresh!</option>
+		  		<option value="unavailable">Sold Out!</option>
+		  	</select>
+		  	<textarea type="text" ref="desc" placeholder="Desc"></textarea>
+		  	<input type="text" ref="image" placeholder="URL to Image" />
+		  	<button type="submit" >Add Item</button>
+		  </form>
+		)
+	}
+})
+
+/*
 	Header Component
 	<Header/>
 */
@@ -63,7 +85,10 @@ const Order = React.createClass({
 const Inventory = React.createClass({
 	render(){
 		return (  
-		  <p>Inventory</p>
+			<div>
+			  <h2>Inventory</h2>
+			  <AddFishForm />
+			</div>
 		)
 	}
 });
