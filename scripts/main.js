@@ -11,6 +11,20 @@ import h from './helpers';
 	the layout - root component rendered to DOM
 */
 const App = React.createClass({
+
+	getInitialState() {
+		return {
+			fishes: {},
+			order: {},			
+		}
+	},
+
+	addFish(fish) {
+		let timestamp = (new Date()).getTime();
+		this.state.fishes['fish-' +timestamp] = fish;
+		this.setState({fishes: this.state.fishes});
+	},
+		
 	render(){
 
 		return (  
@@ -19,7 +33,7 @@ const App = React.createClass({
 					<Header tagline="Fresh Seafood Market"/>					
 				</div>
 				<Order />
-				<Inventory />
+				<Inventory addFish={this.addFish} />
 			</div>	  
 		)		
 	}	
@@ -29,9 +43,23 @@ const App = React.createClass({
 	<AddFishForm/>
 */
 const AddFishForm = React.createClass({
+
+	createFish(e) {
+		e.preventDefault();
+		let fish = {	
+			name:  this.refs.name.value,
+			price:  this.refs.price.value,
+			status:  this.refs.status.value,
+			desc:  this.refs.desc.value,
+			image:  this.refs.image.value
+		};
+		this.props.addFish(fish);
+		this.refs.fishForm.reset();
+	},
+
 	render() {
 		return (  
-		  <form className="fish-edit" onSubmit={this.createFish}>
+		  <form className="fish-edit" ref="fishForm" onSubmit={this.createFish}>
 		  	<input type="text" ref="name" placeholder="Fish Name"/>
 		  	<input type="text" ref="price" placeholder="Fish Price"/>
 		  	<select ref="status">
@@ -87,7 +115,7 @@ const Inventory = React.createClass({
 		return (  
 			<div>
 			  <h2>Inventory</h2>
-			  <AddFishForm />
+			  <AddFishForm {...this.props}/>
 			</div>
 		)
 	}
@@ -97,7 +125,7 @@ const Inventory = React.createClass({
 	<StorePicker/>
 */
 const StorePicker = React.createClass({
-	mixins: [ History ],
+	mixins: [History],
 	goToStore(e) {
 		e.preventDefault();
 		let storeId = this.refs.storeId.value;
@@ -107,7 +135,7 @@ const StorePicker = React.createClass({
 		return (
 		  <form className="store-selector" onSubmit={this.goToStore}>
 		  	<h2>Please Enter A Store</h2>
-		  	<input type="text" ref="storeId" defaultValue={ h.getFunName() } />
+		  	<input type="text" ref="storeId" defaultValue={h.getFunName()} />
 		  	<input type="submit" required />
 		  </form>
 		)
