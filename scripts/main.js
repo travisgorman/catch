@@ -163,9 +163,8 @@ const Order = React.createClass({
 		  	<h2 className="order-title">Your Order</h2>
 		  	<ul className="order">
 			  	<li className="total">
-			  		<strong>Total:
-			  			{total}
-			  		</strong>
+			  		<strong>Total:</strong>
+			  		{h.formatPrice(total)}
 			  	</li>
 		  	</ul>
 		  </div>
