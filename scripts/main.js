@@ -35,10 +35,7 @@ const App = React.createClass({
 	},
 	renderFish(key){
 		return (  
-		  <Fish 
-		  key={key} 
-		  index={key} 
-		  details={this.state.fishes[key]}
+		  <Fish key={key}index={key} details={this.state.fishes[key]}
 		  addToOrder={this.addToOrder}/>
 		)
 	},
@@ -52,8 +49,9 @@ const App = React.createClass({
 							.map(this.renderFish)}
 					</ul>
 				</div>
-				<Order />
-				<Inventory addFish={this.props.loadSamples} loadSamples={this.loadSamples}/>
+			{/* make Apps state available to the Order component */}
+				<Order fishes={this.state.fishes} order={this.state.order} />
+				<Inventory addFish={this.addFish} loadSamples={this.loadSamples}/>
 			</div>
 		)
 	}
@@ -102,7 +100,7 @@ const AddFishForm = React.createClass({
 			status:  this.refs.status.value,
 			desc:  this.refs.desc.value,
 			image:  this.refs.image.value
-		};
+		};                
 		this.props.addFish(fish);
 		this.refs.fishForm.reset();
 	},
@@ -149,8 +147,28 @@ const Header = React.createClass({
 */
 const Order = React.createClass({
 	render() {
+		let orderIds = Object.keys(this.props.order);
+
+		let total = orderIds.reduce((prevTotal, key)=> {
+			let fish = this.props.fishes[key];
+			let count = this.props.order[key];
+			let isAvailable = fish && fish.status === 'available';
+			if (fish && isAvailable) {
+				return prevTotal + (count * parseInt(fish.price) || 0);
+			}
+			return prevTotal;
+		}, 0);
 		return (
-		  <p>Order</p>
+		  <div className="order-wrap">
+		  	<h2 className="order-title">Your Order</h2>
+		  	<ul className="order">
+			  	<li className="total">
+			  		<strong>Total:
+			  			{total}
+			  		</strong>
+			  	</li>
+		  	</ul>
+		  </div>
 		)
 	}
 });
