@@ -35,8 +35,11 @@ const App = React.createClass({
 	},
 	renderFish(key){
 		return (  
-		  <Fish key={key}index={key} details={this.state.fishes[key]}
-		  addToOrder={this.addToOrder}/>
+		  <Fish 
+		  	key={key}
+		  	index={key} 
+		  	details={this.state.fishes[key]}
+		  	addToOrder={this.addToOrder} />
 		)
 	},
 	render() {
@@ -59,7 +62,6 @@ const App = React.createClass({
 
 const Fish = React.createClass({
 	onButtonClick(){
-		console.log( "Going to add the fish: ", this.props.index);
 		let key = this.props.index;
 		this.props.addToOrder(key);
 	},
@@ -67,6 +69,7 @@ const Fish = React.createClass({
 		let details = this.props.details;
 		let isAvailable = (details.status === 'available' ? true : false);
 		let buttonText = (isAvailable ? 'Add To Order' : 'Sold Out!');	
+		
 		return (  
 		  <li className="menu-fish">
 		  	<img src={details.image} alt={details.name}/>
@@ -146,6 +149,21 @@ const Header = React.createClass({
 	<Order/>
 */
 const Order = React.createClass({
+
+	renderOrder(key) {
+		let fish = this.props.fishes[key];
+		let count = this.props.order[key];
+		if (!fish) {
+			return <li key={key}>Sorry, fish no longer available!</li>;
+		}
+		return (
+		  <li>
+		  	{count}lbs{fish.name}
+		  	<span className="price">{h.formatPrice(count * fish.price)}</span>		  	
+		  </li>
+	  )
+	},
+
 	render() {
 		let orderIds = Object.keys(this.props.order);
 
@@ -153,15 +171,19 @@ const Order = React.createClass({
 			let fish = this.props.fishes[key];
 			let count = this.props.order[key];
 			let isAvailable = fish && fish.status === 'available';
+
 			if (fish && isAvailable) {
 				return prevTotal + (count * parseInt(fish.price) || 0);
 			}
+
 			return prevTotal;
 		}, 0);
+
 		return (
 		  <div className="order-wrap">
 		  	<h2 className="order-title">Your Order</h2>
 		  	<ul className="order">
+		  		{orderIds.map(this.renderOrder)}
 			  	<li className="total">
 			  		<strong>Total:</strong>
 			  		{h.formatPrice(total)}
