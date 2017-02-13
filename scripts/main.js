@@ -1,39 +1,37 @@
 var React = require('react');
-var ReactDOM = require('react-dom');
 var ReactRouter = require('react-router');
+var ReactDOM = require('react-dom');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 var Navigation = ReactRouter.Navigation;
 var History = ReactRouter.History;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
-import h from './helpers';
-/*
-	the layout - root component rendered to DOM
-*/
+var h = require('./helpers');
+
 const App = React.createClass({
-	getInitialState(){
+	getInitialState() {
 		return {
 			fishes: {},
 			order: {},
 		}
 	},
-	addToOrder(key){
+	addToOrder(key) {
 		this.state.order[key] = this.state.order[key] + 1 || 1;
 		this.setState({
 			order: this.state.order
 		});
 	},
-	addFish(fish){
+	addFish(fish) {
 		let timestamp = (new Date()).getTime();
 		this.state.fishes['fish-'+timestamp] = fish;
 		this.setState({fishes: this.state.fishes});
 	},
-	loadSamples(){
+	loadSamples() {
 		this.setState({
 			fishes: require('./sample-fishes')
 		});
 	},
-	renderFish(key){
+	renderFish(key) {
 		return (  
 		  <Fish 
 		  	key={key}
@@ -52,7 +50,6 @@ const App = React.createClass({
 							.map(this.renderFish)}
 					</ul>
 				</div>
-			{/* make Apps state available to the Order component */}
 				<Order fishes={this.state.fishes} order={this.state.order} />
 				<Inventory addFish={this.addFish} loadSamples={this.loadSamples}/>
 			</div>
@@ -61,15 +58,14 @@ const App = React.createClass({
 });
 
 const Fish = React.createClass({
-	onButtonClick(){
+	onButtonClick() {
 		let key = this.props.index;
 		this.props.addToOrder(key);
 	},
-	render(){
+	render() {
 		let details = this.props.details;
 		let isAvailable = (details.status === 'available' ? true : false);
-		let buttonText = (isAvailable ? 'Add To Order' : 'Sold Out!');	
-		
+		let buttonText = (isAvailable ? 'Add To Order' : 'Sold Out!');
 		return (  
 		  <li className="menu-fish">
 		  	<img src={details.image} alt={details.name}/>
@@ -149,7 +145,6 @@ const Header = React.createClass({
 	<Order/>
 */
 const Order = React.createClass({
-
 	renderOrder(key) {
 		let fish = this.props.fishes[key];
 		let count = this.props.order[key];
@@ -163,22 +158,17 @@ const Order = React.createClass({
 		  </li>
 	  )
 	},
-
 	render() {
 		let orderIds = Object.keys(this.props.order);
-
 		let total = orderIds.reduce((prevTotal, key)=> {
 			let fish = this.props.fishes[key];
 			let count = this.props.order[key];
 			let isAvailable = fish && fish.status === 'available';
-
 			if (fish && isAvailable) {
 				return prevTotal + (count * parseInt(fish.price) || 0);
 			}
-
 			return prevTotal;
 		}, 0);
-
 		return (
 		  <div className="order-wrap">
 		  	<h2 className="order-title">Your Order</h2>
@@ -219,7 +209,7 @@ const StorePicker = React.createClass({
 		let storeId = this.refs.storeId.value;
 		this.history.pushState(null, '/store/' + storeId);
 	},
-	render: function(){
+	render: function() {
 		return (
 		  <form className="store-selector" onSubmit={this.goToStore}>
 		  	<h2>Please Enter A Store</h2>
@@ -234,7 +224,7 @@ const StorePicker = React.createClass({
 	<NotFound />
 */
 const NotFound = React.createClass({
-	render: function(){
+	render: function() {
 		return (  
 			<h1>Not Found!</h1>
 		)
