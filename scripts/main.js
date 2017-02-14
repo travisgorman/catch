@@ -10,6 +10,7 @@ var h = require('./helpers');
 var Rebase = require('re-base');
 var base = Rebase.createClass('https://catch-bfec7.firebaseio.com');
 
+// firebase config 
 // var config = {
 //     apiKey: "AIzaSyCkF3cbDFUpuSKptWQ9ja7MISoq4aCItDY",
 //     authDomain: "catch-bfec7.firebaseapp.com",
@@ -28,11 +29,20 @@ const App = React.createClass({
 	},
 
 	componentDidMount() {
-		base.syncState(this.props.params.storeId + '/fishes',
-			{
+		base.syncState(this.props.params.storeId + '/fishes', {
 				context: this,
 				state: 'fishes'
 		});
+		var localStorageRef = localStorage.getItem('order-' + this.props.params.storeId);
+		if (localStorageRef) {
+			this.setState({
+				order: JSON.parse(localStorageRef)
+			});
+		}
+	},
+
+	componentWillUpdate(nextProps, nextState) {
+		localStorage.setItem('order-' + this.props.params.storeId, JSON.stringify(nextState.order))
 	},
 
 	addToOrder(key) {
@@ -185,11 +195,10 @@ const Order = React.createClass({
 			return <li key={key}>Sorry, fish no longer available!</li>;
 		}
 		return (
-		  <li>
-		  	{count}lbs{fish.name}
-		  	<span className="price">
-		  		{h.formatPrice(count * fish.price)}
-	  		</span>		  	
+		  <li key={key}>
+		  	{count}lbs
+		  	{fish.name}
+		  	<span className="price">{h.formatPrice(count * fish.price)}</span>
 		  </li>
 	  )
 	},
@@ -224,7 +233,7 @@ const Order = React.createClass({
 	<Inventory/>
 */
 const Inventory = React.createClass({
-	
+
 	render() {
 		return (
 			<div>
