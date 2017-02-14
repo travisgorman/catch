@@ -7,30 +7,53 @@ var Navigation = ReactRouter.Navigation;
 var History = ReactRouter.History;
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 var h = require('./helpers');
+var Rebase = require('re-base');
+var base = Rebase.createClass('https://catch-bfec7.firebaseio.com');
+
+// var config = {
+//     apiKey: "AIzaSyCkF3cbDFUpuSKptWQ9ja7MISoq4aCItDY",
+//     authDomain: "catch-bfec7.firebaseapp.com",
+//     databaseURL: "https://catch-bfec7.firebaseio.com",
+//     storageBucket: "catch-bfec7.appspot.com",
+//     messagingSenderId: "1054702513280"
+//   };
 
 const App = React.createClass({
+
 	getInitialState() {
 		return {
 			fishes: {},
 			order: {},
 		}
 	},
+
+	componentDidMount() {
+		base.syncState(this.props.params.storeId + '/fishes',
+			{
+				context: this,
+				state: 'fishes'
+		});
+	},
+
 	addToOrder(key) {
 		this.state.order[key] = this.state.order[key] + 1 || 1;
 		this.setState({
 			order: this.state.order
 		});
 	},
+
 	addFish(fish) {
 		let timestamp = (new Date()).getTime();
 		this.state.fishes['fish-'+timestamp] = fish;
 		this.setState({fishes: this.state.fishes});
 	},
+
 	loadSamples() {
 		this.setState({
 			fishes: require('./sample-fishes')
 		});
 	},
+
 	renderFish(key) {
 		return (  
 		  <Fish 
@@ -40,6 +63,7 @@ const App = React.createClass({
 		  	addToOrder={this.addToOrder} />
 		)
 	},
+
 	render() {
 		return (
 			<div className="catch-of-the-day">
@@ -56,12 +80,17 @@ const App = React.createClass({
 		)
 	}
 });
-
+/*
+	Fish Component
+	<Fish />
+*/
 const Fish = React.createClass({
+
 	onButtonClick() {
 		let key = this.props.index;
 		this.props.addToOrder(key);
 	},
+
 	render() {
 		let details = this.props.details;
 		let isAvailable = (details.status === 'available' ? true : false);
@@ -91,6 +120,7 @@ const Fish = React.createClass({
 	<AddFishForm/>
 */
 const AddFishForm = React.createClass({
+
 	createFish(e) {
 		e.preventDefault();
 		let fish = {
@@ -103,6 +133,7 @@ const AddFishForm = React.createClass({
 		this.props.addFish(fish);
 		this.refs.fishForm.reset();
 	},
+
 	render() {
 		return (
 		  <form className="fish-edit" ref="fishForm" onSubmit={this.createFish}>
@@ -124,6 +155,7 @@ const AddFishForm = React.createClass({
 	<Header/>
 */
 const Header = React.createClass({
+
 	render() {
 		return (
 		  <header className="top">
@@ -145,6 +177,7 @@ const Header = React.createClass({
 	<Order/>
 */
 const Order = React.createClass({
+
 	renderOrder(key) {
 		let fish = this.props.fishes[key];
 		let count = this.props.order[key];
@@ -154,10 +187,13 @@ const Order = React.createClass({
 		return (
 		  <li>
 		  	{count}lbs{fish.name}
-		  	<span className="price">{h.formatPrice(count * fish.price)}</span>		  	
+		  	<span className="price">
+		  		{h.formatPrice(count * fish.price)}
+	  		</span>		  	
 		  </li>
 	  )
 	},
+
 	render() {
 		let orderIds = Object.keys(this.props.order);
 		let total = orderIds.reduce((prevTotal, key)=> {
@@ -188,6 +224,7 @@ const Order = React.createClass({
 	<Inventory/>
 */
 const Inventory = React.createClass({
+	
 	render() {
 		return (
 			<div>
@@ -203,12 +240,15 @@ const Inventory = React.createClass({
 	<StorePicker/>
 */
 const StorePicker = React.createClass({
+
 	mixins: [History],
+
 	goToStore(e) {
 		e.preventDefault();
 		let storeId = this.refs.storeId.value;
 		this.history.pushState(null, '/store/' + storeId);
 	},
+
 	render: function() {
 		return (
 		  <form className="store-selector" onSubmit={this.goToStore}>
@@ -224,6 +264,7 @@ const StorePicker = React.createClass({
 	<NotFound />
 */
 const NotFound = React.createClass({
+
 	render: function() {
 		return (  
 			<h1>Not Found!</h1>
