@@ -10,6 +10,7 @@ var h = require('./helpers');
 var Rebase = require('re-base');
 var base = Rebase.createClass('https://catch-bfec7.firebaseio.com');
 var Catalyst = require('react-catalyst');
+var CSSTransitionGroup = require('react-addons-css-transition-group');
 
 // firebase config 
 // var config = {
@@ -131,10 +132,17 @@ const Order = React.createClass({
 		}
 		return (
 		  <li key={key}>
-		  	{count}lbs
-		  	{fish.name}
+			  <span>
+				  <CSSTransitionGroup 
+				  	component="span" 
+				  	transitionName="count"
+				  	transitionLeaveTimeout={250}
+				  	transitionEnterTimeout={250}>
+				  	<span key={count}>{count}</span>
+				  </CSSTransitionGroup>
+				  	lbs {fish.name} {removeButton}		  
+			  </span>
 		  	<span className="price">{h.formatPrice(count * fish.price)}</span>
-		  	{removeButton}
 		  </li>
 	  )
 	},
@@ -152,14 +160,20 @@ const Order = React.createClass({
 		}, 0);
 		return (
 		  <div className="order-wrap">
-		  	<h2 className="order-title">Your Order</h2>
-		  	<ul className="order">
+		  	<h2 className="order-title">Your Order</h2>		  	
+		  	<CSSTransitionGroup 
+		  		className="order" 
+		  		component="ul"
+		  		transitionName="order"
+		  		transitionEnterTimeout={500}
+		  		transitionLeaveTimeout={500}>
 		  		{orderIds.map(this.renderOrder)}
 			  	<li className="total">
 			  		<strong>Total:</strong>
 			  		{h.formatPrice(total)}
 			  	</li>
-		  	</ul>
+		  	</CSSTransitionGroup>
+
 		  </div>
 		)
 	}
