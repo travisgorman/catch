@@ -153,7 +153,15 @@ const Inventory = React.createClass({
 		var linkState = this.props.linkState;
 		return (  
 			<div className="fish-edit" key={key}>
-					<input type="text" valueLink={linkState('fishes.'+key+'.name')}/>
+				<input type="text" valueLink={linkState('fishes.'+key+'.name')}/>
+				<input type="text" valueLink={linkState('fishes.'+key+'.price')}/>
+				<select valueLink={linkState('fishes.'+key+'.status')}>
+					<option defaultValue="available">Fresh!</option>
+					<option defaultValue="unavailable">Sold Out!</option>
+				</select>
+				<textarea type="text" valueLink={linkState('fishes.'+key+'.desc')}></textarea>
+				<input type="text" valueLink={linkState('fishes.'+key+'.image')}/>
+				<button type="submit">Add Item</button>
 			</div>
 		)
 	},
