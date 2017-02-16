@@ -9,6 +9,7 @@ var createBrowserHistory = require('history/lib/createBrowserHistory');
 var h = require('./helpers');
 var Rebase = require('re-base');
 var base = Rebase.createClass('https://catch-bfec7.firebaseio.com');
+var Catalyst = require('react-catalyst');
 
 // firebase config 
 // var config = {
@@ -21,6 +22,8 @@ var base = Rebase.createClass('https://catch-bfec7.firebaseio.com');
 
 const App = React.createClass({
 
+	mixins: [Catalyst.LinkedStateMixin],
+	
 	getInitialState() {
 		return {
 			fishes: {},
@@ -85,103 +88,15 @@ const App = React.createClass({
 					</ul>
 				</div>
 				<Order fishes={this.state.fishes} order={this.state.order} />
-				<Inventory addFish={this.addFish} loadSamples={this.loadSamples}/>
+				<Inventory addFish={this.addFish} loadSamples={this.loadSamples} fishes={this.state.fishes} linkState={this.linkState}/>
 			</div>
 		)
 	}
 });
 /*
-	Fish Component
-	<Fish />
+	Inventory Component
+	<Inventory/>
 */
-const Fish = React.createClass({
-
-	onButtonClick() {
-		let key = this.props.index;
-		this.props.addToOrder(key);
-	},
-
-	render() {
-		let details = this.props.details;
-		let isAvailable = (details.status === 'available' ? true : false);
-		let buttonText = (isAvailable ? 'Add To Order' : 'Sold Out!');
-		return (  
-		  <li className="menu-fish">
-		  	<img src={details.image} alt={details.name}/>
-		  	<h3 className="fish-name">
-		  		{details.name}
-			  	<span className="price">
-			  		{details.price}
-		  		</span>
-		  	</h3>
-		  	<p>{details.desc}</p>
-		  	<button 
-		  		onClick={this.onButtonClick} 
-		  		disabled={!isAvailable}>
-		  		{buttonText}
-	  		</button>
-	  	</li>
-		)
-	}
-});
-
-/*
-	Add Fish Form Component
-	<AddFishForm/>
-*/
-const AddFishForm = React.createClass({
-
-	createFish(e) {
-		e.preventDefault();
-		let fish = {
-			name:  this.refs.name.value,
-			price:  this.refs.price.value,
-			status:  this.refs.status.value,
-			desc:  this.refs.desc.value,
-			image:  this.refs.image.value
-		};                
-		this.props.addFish(fish);
-		this.refs.fishForm.reset();
-	},
-
-	render() {
-		return (
-		  <form className="fish-edit" ref="fishForm" onSubmit={this.createFish}>
-		  	<input type="text" ref="name" placeholder="Fish Name"/>
-		  	<input type="text" ref="price" placeholder="Fish Price"/>
-		  	<select ref="status">
-		  		<option value="available">Fresh!</option>
-		  		<option value="unavailable">Sold Out!</option>
-		  	</select>
-		  	<textarea type="text" ref="desc" placeholder="Desc"></textarea>
-		  	<input type="text" ref="image" placeholder="URL to Image" />
-		  	<button type="submit" >Add Item</button>
-		  </form>
-		)
-	}
-});
-/*
-	Header Component
-	<Header/>
-*/
-const Header = React.createClass({
-
-	render() {
-		return (
-		  <header className="top">
-		  	<h1>Catch 
-		  	<span className="ofThe">
-		  		<span className="of">of</span>
-		  		<span className="the">the</span>
-		  	</span>		  	
-		  	Day</h1>
-		  	<h3 className="tagline">
-		  		<span>{this.props.tagline}</span>
-		  	</h3>
-		  </header>
-		)
-	}
-});
 /*
 	Order Component
 	<Order/>
@@ -230,17 +145,119 @@ const Order = React.createClass({
 });
 /*
 	Inventory Component
-	<Inventory/>
+	<Inventory />
 */
 const Inventory = React.createClass({
+
+	renderInventory(key) {
+		var linkState = this.props.linkState;
+		return (  
+			<div className="fish-edit" key={key}>
+					<input type="text" valueLink={linkState('fishes.'+key+'.name')}/>
+			</div>
+		)
+	},
 
 	render() {
 		return (
 			<div>
 			  <h2>Inventory</h2>
+			  {Object.keys(this.props.fishes).map(this.renderInventory)}
 			  <AddFishForm {...this.props}/>
 			  <button onClick={this.props.loadSamples}>Load Sample Fishes</button>
 			</div>
+		)
+	}
+});
+/*
+	Add Fish Form Component
+	<AddFishForm/>
+*/
+const AddFishForm = React.createClass({
+
+	createFish(e) {
+		e.preventDefault();
+		let fish = {
+			name:  this.refs.name.value,
+			price:  this.refs.price.value,
+			status:  this.refs.status.value,
+			desc:  this.refs.desc.value,
+			image:  this.refs.image.value
+		};                
+		this.props.addFish(fish);
+		this.refs.fishForm.reset();
+	},
+
+	render() {
+		return (
+		  <form className="fish-edit" ref="fishForm" onSubmit={this.createFish}>
+		  	<input type="text" ref="name" placeholder="Fish Name"/>
+		  	<input type="text" ref="price" placeholder="Fish Price"/>
+		  	<select ref="status">
+		  		<option value="available">Fresh!</option>
+		  		<option value="unavailable">Sold Out!</option>
+		  	</select>
+		  	<textarea type="text" ref="desc" placeholder="Desc"></textarea>
+		  	<input type="text" ref="image" placeholder="URL to Image" />
+		  	<button type="submit" >Add Item</button>
+		  </form>
+		)
+	}
+});
+/*
+	Fish Component
+	<Fish />
+*/
+const Fish = React.createClass({
+
+	onButtonClick() {
+		let key = this.props.index;
+		this.props.addToOrder(key);
+	},
+
+	render() {
+		let details = this.props.details;
+		let isAvailable = (details.status === 'available' ? true : false);
+		let buttonText = (isAvailable ? 'Add To Order' : 'Sold Out!');
+		return (  
+		  <li className="menu-fish">
+		  	<img src={details.image} alt={details.name}/>
+		  	<h3 className="fish-name">
+		  		{details.name}
+			  	<span className="price">
+			  		{details.price}
+		  		</span>
+		  	</h3>
+		  	<p>{details.desc}</p>
+		  	<button 
+		  		onClick={this.onButtonClick} 
+		  		disabled={!isAvailable}>
+		  		{buttonText}
+	  		</button>
+	  	</li>
+		)
+	}
+});
+
+/*
+	Header Component
+	<Header/>
+*/
+const Header = React.createClass({
+
+	render() {
+		return (
+		  <header className="top">
+		  	<h1>Catch 
+		  	<span className="ofThe">
+		  		<span className="of">of</span>
+		  		<span className="the">the</span>
+		  	</span>		  	
+		  	Day</h1>
+		  	<h3 className="tagline">
+		  		<span>{this.props.tagline}</span>
+		  	</h3>
+		  </header>
 		)
 	}
 });
