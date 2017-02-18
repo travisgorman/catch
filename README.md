@@ -19,5 +19,6 @@ ___
 	-  react-mixin
 	-  react-router
 
+	-react-catalyst
 ___
 
