@@ -12,15 +12,6 @@ var base = Rebase.createClass('https://catch-bfec7.firebaseio.com');
 var Catalyst = require('react-catalyst');
 var CSSTransitionGroup = require('react-addons-css-transition-group');
 
-// firebase config 
-// var config = {
-//     apiKey: "AIzaSyCkF3cbDFUpuSKptWQ9ja7MISoq4aCItDY",
-//     authDomain: "catch-bfec7.firebaseapp.com",
-//     databaseURL: "https://catch-bfec7.firebaseio.com",
-//     storageBucket: "catch-bfec7.appspot.com",
-//     messagingSenderId: "1054702513280"
-//   };
-
 const App = React.createClass({
 
 	mixins: [Catalyst.LinkedStateMixin],
@@ -123,6 +114,12 @@ const App = React.createClass({
 */
 const Order = React.createClass({
 
+	propTypes: {
+		fishes: React.PropTypes.object,
+		order: React.PropTypes.object,
+		removeFromOrder: React.PropTypes.func,
+	},
+
 	renderOrder(key) {
 		let fish = this.props.fishes[key];
 		let count = this.props.order[key];
@@ -183,6 +180,14 @@ const Order = React.createClass({
 	<Inventory />
 */
 const Inventory = React.createClass({
+
+	propTypes: {
+		addFish: React.PropTypes.func,
+		removeFish: React.PropTypes.func,
+		loadSamples: React.PropTypes.func,
+		fishes: React.PropTypes.object,
+		linkState: React.PropTypes.func,
+	},
 
 	renderInventory(key) {
 		var linkState = this.props.linkState;
@@ -287,7 +292,9 @@ const Fish = React.createClass({
 	<Header/>
 */
 const Header = React.createClass({
-
+	propTypes: {
+		tagline: React.PropTypes.string.isRequired
+	},
 	render() {
 		return (
 		  <header className="top">
