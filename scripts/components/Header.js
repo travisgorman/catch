@@ -1,10 +1,6 @@
 import React from 'react'
 
-/*
-	Header Component
-	<Header/>
-*/
-export default Header = React.createClass({
+const Header = React.createClass({
 	propTypes: {
 		tagline: React.PropTypes.string.isRequired
 	},
@@ -24,3 +20,4 @@ export default Header = React.createClass({
 		)
 	}
 });
+export default Header

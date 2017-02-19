@@ -1,6 +1,9 @@
 import React from 'react'
 
-export default AddFishForm = React.createClass({
+const AddFishForm = React.createClass({
+	propTypes: {
+		addFish: React.PropTypes.func,
+	},
 	createFish(e) {
 		e.preventDefault();
 		let fish = {
@@ -29,3 +32,5 @@ export default AddFishForm = React.createClass({
 		)
 	}
 });
+
+export default AddFishForm

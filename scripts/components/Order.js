@@ -2,7 +2,7 @@ import React from 'react'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
 import h from '../helpers'
 
-export default Order = React.createClass({
+const Order = React.createClass({
 	propTypes: {
 		fishes: React.PropTypes.object,
 		order: React.PropTypes.object,
@@ -23,15 +23,11 @@ export default Order = React.createClass({
 				  	transitionName="count"
 				  	transitionLeaveTimeout={250}
 				  	transitionEnterTimeout={250}>
-				  	<span key={count}>
-				  		{count}
-				  	</span>
+				  	<span key={count}>{count}</span>
 				  </CSSTransitionGroup>
 				  	lbs {fish.name} {removeButton}		  
 			  </span>
-		  	<span className="price">
-		  		{h.formatPrice(count * fish.price)}
-		  	</span>
+		  	<span className="price">{h.formatPrice(count * fish.price)}</span>
 		  </li>
 	  )
 	},
@@ -61,7 +57,10 @@ export default Order = React.createClass({
 			  		{h.formatPrice(total)}
 			  	</li>
 		  	</CSSTransitionGroup>
+
 		  </div>
 		)
 	}
 });
+
+export default Order

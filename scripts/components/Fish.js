@@ -1,12 +1,13 @@
 import React from 'react'
 
-export default Fish = React.createClass({
-
+const Fish = React.createClass({
+	propTypes: {
+		addToOrder: React.PropTypes.func,
+	},
 	onButtonClick() {
 		let key = this.props.index;
 		this.props.addToOrder(key);
 	},
-
 	render() {
 		let details = this.props.details;
 		let isAvailable = (details.status === 'available' ? true : false);
@@ -30,3 +31,5 @@ export default Fish = React.createClass({
 		)
 	}
 });
+
+export default Fish

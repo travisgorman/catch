@@ -1,17 +1,16 @@
-import h from './helpers'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Route, Navigation, History } from 'react-router'
-import createBrowserHistory from 'history/lib/createBrowserHistory'
-import StorePicker from './components/StorePicker'
+import { Router, Route } from 'react-router'
+import {createHistory} from 'history'
+import App from './components/App'
 import NotFound from './components/NotFound'
+import StorePicker from './components/StorePicker'
 
 let routes = (  
-  <Router 
-  	history={createBrowserHistory()} >
-  	<Route path="/" component={StorePicker} />
-  	<Route path="/store/:storeId" component={App} />
-  	<Route path="*" component={NotFound} />
+  <Router history={createHistory()}>
+	  	<Route path="/" component={StorePicker}/>
+	  	<Route path="/store/:storeId" component={App}/>
+	  	<Route path="*" component={NotFound}/>
   </Router>
 )
 
